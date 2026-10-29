@@ -6,7 +6,7 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {validateResponse} from '../server/worker.js';
 let mf,db;
 const password='test-password-only';const salt=randomBytes(16);const digest=pbkdf2Sync(password,salt,100000,32,'sha256').toString('hex');
-before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modules:true,scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');await db.exec(readFileSync(new URL('../migrations/0001_initial.sql',import.meta.url),'utf8').replace(/\n/g,' '))});
+before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modules:true,scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
 after(()=>mf?.dispose());
 const request=(path,data,cookie='',origin='https://example.com',ip='test')=>mf.dispatchFetch('https://example.com'+path,{method:data?'POST':'GET',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie,'CF-Connecting-IP':ip},body:data?JSON.stringify(data):undefined});
 const cookieOf=r=>r.headers.get('set-cookie').split(';')[0];
@@ -17,3 +17,22 @@ test('cross-origin mutations fail before any write',async()=>{assert.equal((awai
 test('valid admin can read; incorrect password fails; logout revokes cookie',async()=>{assert.equal((await request('/api/admin/login',{username:'Ryan Mehta',password:'wrong'})).status,401);const login=await request('/api/admin/login',{username:'Ryan Mehta',password});assert.equal(login.status,200);const cookie=cookieOf(login);const view=await request('/api/admin/responses',null,cookie);assert.equal(view.status,200);assert.equal(view.headers.get('cache-control'),'no-store');assert.equal((await view.json()).responses.length,2);await request('/api/admin/logout',{},cookie);assert.equal((await request('/api/admin/responses',null,cookie)).status,401)});
 test('repeated login attempts are blocked',async()=>{for(let i=0;i<5;i++)assert.equal((await request('/api/admin/login',{username:'Ryan Mehta',password:'wrong'},'','https://example.com','rate-test')).status,401);assert.equal((await request('/api/admin/login',{username:'Ryan Mehta',password},'','https://example.com','rate-test')).status,429)});
 test('overlarge request bodies are rejected',async()=>{assert.equal((await request('/api/responses',{name:'x'.repeat(5000),dates:['2026-11-05']})).status,400)});
+
+test('host edits, optimistic concurrency, recoverable trash and guest isolation',async()=>{
+ const guest=await request('/api/responses',{name:'Management test',dates:['2026-11-05']});const guestCookie=cookieOf(guest);
+ const login=await request('/api/admin/login',{username:'Ryan Mehta',password},'','https://example.com','management');const cookie=cookieOf(login);
+ const getRow=async()=> (await (await request('/api/admin/responses',null,cookie)).json()).responses.find(r=>r.name.startsWith('Management'));
+ let row=await getRow();const path=`/api/admin/responses/${row.id}`;
+ assert.equal((await request(path+'/edit',{name:'Intruder',dates:row.dates,updated_at:row.updated_at})).status,401);
+ assert.equal((await request(path+'/edit',{name:'Management edited',dates:['2026-11-02'],updated_at:row.updated_at},cookie)).status,400);
+ const edit={name:'Management edited',dates:['2026-12-03'],updated_at:row.updated_at};
+ assert.equal((await request(path+'/edit',edit,cookie,'https://evil.example')).status,403);
+ assert.equal((await request(path+'/edit',edit,cookie)).status,200);
+ assert.equal((await request(path+'/edit',edit,cookie)).status,409);
+ row=await getRow();assert.deepEqual(row.dates,['2026-12-03']);
+ assert.equal((await request(path+'/trash',{updated_at:row.updated_at},cookie)).status,200);
+ row=await getRow();assert.ok(row.deleted_at);
+ assert.equal((await request('/api/responses',{name:'Management resurrected',dates:['2026-11-05']},guestCookie)).status,409);
+ assert.equal((await request(path+'/restore',{updated_at:row.updated_at},cookie)).status,200);
+ row=await getRow();assert.equal(row.deleted_at,null);assert.equal(row.name,'Management edited');
+});

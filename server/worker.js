@@ -41,7 +41,8 @@ async function api(request,env){
   const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'submit:'+ip,60,3600))return json({error:'Too many submissions. Try again later.'},429);
   let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();
   const editHash=await hash(raw),now=Date.now();
-  await env.DB.prepare(`INSERT INTO responses(id,edit_hash,name,dates,created_at,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,dates=excluded.dates,updated_at=excluded.updated_at`).bind(crypto.randomUUID(),editHash,data.name,JSON.stringify(data.dates),now,now).run();
+  const saved=await env.DB.prepare(`INSERT INTO responses(id,edit_hash,name,dates,created_at,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,dates=excluded.dates,updated_at=MAX(responses.updated_at+1,excluded.updated_at) WHERE responses.deleted_at IS NULL`).bind(crypto.randomUUID(),editHash,data.name,JSON.stringify(data.dates),now,now).run();
+  if(!saved.meta.changes)return json({error:'This response has been removed by the host. Please contact Ryan.'},409);
   return json({ok:true},200,{'Set-Cookie':cookie(request,'hoho_guest',raw,60*60*24*120)});
  }
  if(path==='/api/admin/login'&&request.method==='POST'){
@@ -59,9 +60,20 @@ async function api(request,env){
   const raw=cookies(request).hoho_admin;if(raw)await env.DB.prepare('DELETE FROM sessions WHERE token_hash=?').bind(await hash(raw)).run();
   return json({ok:true},200,{'Set-Cookie':cookie(request,'hoho_admin','',0)});
  }
+ const action=path.match(/^\/api\/admin\/responses\/([a-f0-9-]{36})\/(edit|trash|restore)$/);
+ if(action&&request.method==='POST'){
+  if(!await session(request,env))return json({error:'Sign in to manage responses.'},401);
+  const data=await body(request);if(!Number.isSafeInteger(data?.updated_at))return json({error:'Refresh the response before editing.'},400);
+  const [,id,operation]=action,now=Date.now();let statement;
+  if(operation==='edit'){const valid=validateResponse(data);if(!valid)return json({error:'Enter a name and at least one valid Thursday–Sunday date.'},400);statement=env.DB.prepare('UPDATE responses SET name=?,dates=?,updated_at=MAX(updated_at+1,?) WHERE id=? AND updated_at=? AND deleted_at IS NULL').bind(valid.name,JSON.stringify(valid.dates),now,id,data.updated_at)}
+  else if(operation==='trash')statement=env.DB.prepare('UPDATE responses SET deleted_at=?,updated_at=MAX(updated_at+1,?) WHERE id=? AND updated_at=? AND deleted_at IS NULL').bind(now,now,id,data.updated_at);
+  else statement=env.DB.prepare('UPDATE responses SET deleted_at=NULL,updated_at=MAX(updated_at+1,?) WHERE id=? AND updated_at=? AND deleted_at IS NOT NULL').bind(now,id,data.updated_at);
+  const result=await statement.run();if(!result.meta.changes)return json({error:'This response has changed or is no longer available. Refresh and try again.'},409);
+  return json({ok:true});
+ }
  if(path==='/api/admin/responses'&&request.method==='GET'){
   if(!await session(request,env))return json({error:'Sign in to view responses.'},401);
-  const result=await env.DB.prepare('SELECT id,name,dates,created_at,updated_at FROM responses ORDER BY updated_at DESC').all();
+  const result=await env.DB.prepare('SELECT id,name,dates,created_at,updated_at,deleted_at FROM responses ORDER BY updated_at DESC').all();
   return json({responses:result.results.map(row=>({...row,dates:JSON.parse(row.dates)}))});
  }
  return json({error:'Not found.'},404);
