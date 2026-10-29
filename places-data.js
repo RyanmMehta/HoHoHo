@@ -33,6 +33,16 @@ export const categories=[
     "id": "home",
     "title": "A night at home",
     "description": "The best plans can stay in."
+  },
+  {
+    "id": "creative",
+    "title": "Games & creative outings",
+    "description": "Warm indoor plans for a winter night."
+  },
+  {
+    "id": "food",
+    "title": "Food adventures",
+    "description": "A little tasting, a little exploring."
   }
 ];
 export const places=[
@@ -44,7 +54,13 @@ export const places=[
     "description": "Rich hot chocolate and French pastries.",
     "note": "Walk-in only. Closes 8 p.m. weekdays and 7 p.m. weekends: plan an early stop.",
     "cost": "Buy drinks",
-    "url": "https://angelinaparisusa.com/pages/locations"
+    "url": "https://angelinaparisusa.com/pages/locations",
+    "price": "About $20",
+    "includes": "One hot chocolate and a small shared pastry allowance; planning estimate, not a menu quote.",
+    "duration": "45–60 minutes",
+    "group": "2–6",
+    "plan": "Get takeaway if the tearoom queue is long, then walk toward Bryant Park. Weekend visits need an earlier start.",
+    "contribution": 10
   },
   {
     "id": "mariebelle",
@@ -54,7 +70,13 @@ export const places=[
     "description": "A cozy chocolate-and-dessert stop.",
     "note": "Check current table availability and closing time before choosing an evening.",
     "cost": "Buy drinks",
-    "url": "https://mariebelle.com/pages/cacao-bar"
+    "url": "https://mariebelle.com/pages/cacao-bar",
+    "price": "$15–30",
+    "includes": "Drink and dessert allowance; full afternoon tea is a separate, higher-cost booking.",
+    "duration": "45–75 minutes",
+    "group": "2–6",
+    "plan": "Choose cocoa or dessert rather than a full tea service. Check table availability and dietary options.",
+    "contribution": null
   },
   {
     "id": "bryant-rink",
@@ -64,7 +86,13 @@ export const places=[
     "description": "Skate in the park, then browse the holiday stalls.",
     "note": "Reserve a skating session. Admission is free; skate rentals cost extra.",
     "cost": "Rental fees",
-    "url": "https://bryantpark.org/activities/the-rink"
+    "url": "https://bryantpark.org/activities/the-rink",
+    "price": "$0 with own skates; about $19–65 with rentals",
+    "includes": "Official rentals: $18.72–64.48 before tax, including the listed administrative fee. Lockers or bag check may add cost.",
+    "duration": "75–90 minutes including check-in",
+    "group": "4–8",
+    "plan": "Reserve the same session; wear warm socks and gloves. Add snacks afterward only if the stalls are still open.",
+    "contribution": null
   },
   {
     "id": "stuytown-rink",
@@ -74,7 +102,13 @@ export const places=[
     "description": "A neighborhood rink for a smaller outing.",
     "note": "Access check needed: StuyTown describes resident access; rink rules require students to be residents or guests of a resident. Confirm group eligibility first.",
     "cost": "Access restricted",
-    "url": "https://www.iceatstuytown.com/pricing-hours"
+    "url": "https://www.iceatstuytown.com/pricing-hours",
+    "price": "Price to confirm",
+    "includes": "A one-off group/guest price was not verified; season-pass prices are not a per-visit quote.",
+    "duration": "About 1–2 hours",
+    "group": "4–8, subject to access",
+    "plan": "Find a resident contact first and verify admission for every guest before choosing a date.",
+    "contribution": null
   },
   {
     "id": "wollman",
@@ -84,7 +118,13 @@ export const places=[
     "description": "Open-air skating with the skyline around you.",
     "note": "2026–27 season is listed. Book a session and check rental costs.",
     "cost": "Tickets",
-    "url": "https://wollmanrinknyc.com/plan/"
+    "url": "https://wollmanrinknyc.com/plan/",
+    "price": "$35–65 planning allowance",
+    "includes": "Estimated admission plus rental budget; the live session price must be checked before booking.",
+    "duration": "90–120 minutes",
+    "group": "4–8",
+    "plan": "Book matching entry times. Bring gloves and allow time to walk into Central Park; check the last skating session.",
+    "contribution": null
   },
   {
     "id": "rockefeller-rink",
@@ -94,7 +134,13 @@ export const places=[
     "description": "The classic Midtown holiday skating outing.",
     "note": "Timed tickets required; check session availability and rental details.",
     "cost": "Tickets",
-    "url": "https://www.rockefellercenter.com/tickets/the-rink-at-rockefeller-center/"
+    "url": "https://www.rockefellercenter.com/tickets/the-rink-at-rockefeller-center/",
+    "price": "$40–100+ planning allowance",
+    "includes": "Official admission starts at $22; rental, session pricing, tax and extras can raise the total substantially.",
+    "duration": "60-minute skate + check-in",
+    "group": "2–6",
+    "plan": "Best for a small group prioritizing the iconic setting. Compare session totals before committing.",
+    "contribution": null
   },
   {
     "id": "bryant-market",
@@ -104,7 +150,13 @@ export const places=[
     "description": "Browse gifts and share a few market snacks.",
     "note": "Shop hours differ from rink hours; check closing time before a 7 p.m. start.",
     "cost": "Browse + snacks",
-    "url": "https://bryantpark.org/shop-eat/holiday-shops"
+    "url": "https://bryantpark.org/shop-eat/holiday-shops",
+    "price": "$0 browsing; $15–30 optional food",
+    "includes": "Shopping is extra. Snack allowance is a planning estimate, not a package.",
+    "duration": "60–90 minutes",
+    "group": "3–8",
+    "plan": "Meet at a specific park entrance, browse separately, then regroup for one shared snack stop.",
+    "contribution": null
   },
   {
     "id": "union-market",
@@ -114,7 +166,13 @@ export const places=[
     "description": "A downtown gift-and-snack wander.",
     "note": "Listed Nov 12–Dec 24. Thu–Sat closes 9 p.m.; Sunday 8 p.m. Recheck holiday hours.",
     "cost": "Browse + snacks",
-    "url": "https://urbanspacemarkets.com/pages/union-square"
+    "url": "https://urbanspacemarkets.com/pages/union-square",
+    "price": "$0 browsing; $10–25 optional food",
+    "includes": "Gift purchases extra; food allowance is discretionary.",
+    "duration": "60–90 minutes",
+    "group": "3–8",
+    "plan": "Good before a downtown dinner. Pick a spending cap for any mini gift challenge.",
+    "contribution": null
   },
   {
     "id": "columbus-market",
@@ -124,7 +182,13 @@ export const places=[
     "description": "Pair gift browsing with a park-side walk.",
     "note": "Dec 1–31, 2026. Closes 7 p.m. Mon–Thu and 8 p.m. Fri–Sun: needs an earlier start.",
     "cost": "Earlier start",
-    "url": "https://urbanspacemarkets.com/pages/columbus-circle"
+    "url": "https://urbanspacemarkets.com/pages/columbus-circle",
+    "price": "$0 browsing; $10–25 optional food",
+    "includes": "Gift purchases extra; food allowance is discretionary.",
+    "duration": "45–75 minutes",
+    "group": "3–8",
+    "plan": "Go before closing; combine with a short Central Park edge walk, weather permitting.",
+    "contribution": null
   },
   {
     "id": "grand-central",
@@ -134,7 +198,13 @@ export const places=[
     "description": "An indoor artisan market for a cold or rainy day.",
     "note": "Nov 9–Dec 24, 2026. Earlier outing recommended; official page has differing hours, so confirm before going.",
     "cost": "Earlier start",
-    "url": "https://grandcentralterminal.com/holiday-fair/"
+    "url": "https://grandcentralterminal.com/holiday-fair/",
+    "price": "$0 browsing; $10–25 optional food",
+    "includes": "Craft purchases extra; snack allowance is discretionary.",
+    "duration": "45–75 minutes",
+    "group": "3–8",
+    "plan": "Indoor backup for bad weather. This is an earlier outing, not a midnight plan.",
+    "contribution": null
   },
   {
     "id": "rockefeller-tree",
@@ -144,7 +214,13 @@ export const places=[
     "description": "Tree photos and a Midtown winter stroll.",
     "note": "The 2026 tree lighting is Dec 2. Plan your illuminated-tree visit after that; expect crowds.",
     "cost": "Outdoor walk",
-    "url": "https://www.rockefellercenter.com/holidays/rockefeller-center-christmas-tree/"
+    "url": "https://www.rockefellercenter.com/holidays/rockefeller-center-christmas-tree/",
+    "price": "$0; $5–15 optional cocoa",
+    "includes": "Public-plaza walk; paid observation-deck access is not included.",
+    "duration": "45–75 minutes",
+    "group": "3–8",
+    "plan": "Choose a meeting point away from the busiest plaza and take photos in small groups.",
+    "contribution": null
   },
   {
     "id": "dyker",
@@ -154,7 +230,13 @@ export const places=[
     "description": "Explore the neighborhood’s decorated homes.",
     "note": "Private residential displays vary; no guaranteed schedule. Keep sidewalks clear and respect residents. Allow extra travel time.",
     "cost": "Outdoor walk",
-    "url": "https://www.nyc.gov/assets/cecm/downloads/pdf/dos-and-donts-dyker-heights.pdf"
+    "url": "https://www.nyc.gov/assets/cecm/downloads/pdf/dos-and-donts-dyker-heights.pdf",
+    "price": "$0 self-guided; transport extra",
+    "includes": "No tour included. Budget separately for subway or a shared car.",
+    "duration": "60–90 minutes on foot + travel",
+    "group": "4–8",
+    "plan": "Go after dark, wear warm shoes, and keep voices down around homes. Display hours vary.",
+    "contribution": null
   },
   {
     "id": "bronx-lights",
@@ -164,7 +246,13 @@ export const places=[
     "description": "Animal lanterns and illuminated trails.",
     "note": "Select dates Nov 21, 2026–Jan 3, 2027. Lights start 4:30 p.m.; closes 9 p.m., last entry 8 p.m.",
     "cost": "Tickets",
-    "url": "https://bronxzoo.com/holiday-lights/faqs"
+    "url": "https://bronxzoo.com/holiday-lights/faqs",
+    "price": "$30–45 planning allowance",
+    "includes": "Official deal-day adult listing is $29.95; date-specific, regular or any-night tickets may cost more. Food and travel extra.",
+    "duration": "90–120 minutes + travel",
+    "group": "4–8",
+    "plan": "Choose a listed operating date. Arrive early enough to finish before the 9 p.m. close.",
+    "contribution": null
   },
   {
     "id": "rockettes",
@@ -174,7 +262,13 @@ export const places=[
     "description": "A festive show with the Radio City Rockettes.",
     "note": "2026 performances start Nov 4. Choose an evening performance and check seat prices together.",
     "cost": "Tickets",
-    "url": "https://www.rockettes.com/christmas/"
+    "url": "https://www.rockettes.com/christmas/",
+    "price": "$60–150+ planning allowance",
+    "includes": "Seat and performance dependent, not a verified quote. Check the full checkout total before collecting money.",
+    "duration": "About 2 hours with arrival",
+    "group": "4–8",
+    "plan": "Agree on a maximum seat budget, then buy seats together. Do not assume the cheapest advertised seat is available.",
+    "contribution": null
   },
   {
     "id": "train-show",
@@ -184,7 +278,13 @@ export const places=[
     "description": "Miniature NYC landmarks and model trains in the conservatory.",
     "note": "Nov 14, 2026–Jan 10, 2027. Choose one of the extended evening dates; not every night runs late.",
     "cost": "Tickets",
-    "url": "https://www.nybg.org/event/holiday-train-show-2026"
+    "url": "https://www.nybg.org/event/holiday-train-show-2026",
+    "price": "$35–50 planning allowance",
+    "includes": "Estimated adult exhibition budget; verify the selected evening ticket and any surcharges.",
+    "duration": "90–120 minutes + travel",
+    "group": "3–8",
+    "plan": "Use an extended-evening date. Leave time for the Bronx journey and a warm-up break.",
+    "contribution": null
   },
   {
     "id": "escape-game",
@@ -194,7 +294,13 @@ export const places=[
     "description": "A team puzzle adventure before dinner or dessert.",
     "note": "Pick a room and check capacity, private-booking rules, and available times. Not necessarily Christmas-themed.",
     "cost": "Tickets",
-    "url": "https://theescapegame.com/newyorkcity/"
+    "url": "https://theescapegame.com/newyorkcity/",
+    "price": "$45–65 planning allowance",
+    "includes": "Estimated per-player ticket budget, excluding tax; private rooms may require purchasing unused spots.",
+    "duration": "About 90 minutes including briefing",
+    "group": "4–8, room-dependent",
+    "plan": "Choose difficulty and capacity together; confirm whether strangers may join the room.",
+    "contribution": null
   },
   {
     "id": "white-elephant",
@@ -204,7 +310,13 @@ export const places=[
     "description": "Bring one wrapped gift; agree on a spending cap and swap rules beforehand.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "About $20",
+    "includes": "Suggested gift budget, not an admission fee. Ryan-supported contribution funds a shared gift pool.",
+    "duration": "60–90 minutes",
+    "group": "6–12",
+    "plan": "Use a shared gift pool if collecting contributions. Draw numbers; allow two steals per gift and set a clear ending.",
+    "contribution": 10
   },
   {
     "id": "potluck",
@@ -214,7 +326,13 @@ export const places=[
     "description": "Everyone brings a dish. Coordinate mains, sides, desserts, and dietary needs.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "About $20",
+    "includes": "Estimated shared grocery cost per guest; contributions buy ingredients. Avoid charging both a fee and a full dish.",
+    "duration": "3–4 hours",
+    "group": "6–12",
+    "plan": "Assign mains, sides and desserts; collect dietary needs. Confirm whether people contribute cash or bring food.",
+    "contribution": 10
   },
   {
     "id": "home-escape",
@@ -224,7 +342,13 @@ export const places=[
     "description": "DIY a missing-present mystery with clue envelopes, a timer, and a final surprise. Someone prepares the puzzles.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "$5–15",
+    "includes": "DIY printouts, clue envelopes, small locks or props shared among 6–8 people.",
+    "duration": "60–90 minutes of play",
+    "group": "4–8",
+    "plan": "One host designs a missing-present mystery with 5–7 puzzles and a hint system. Test the clues before guests arrive.",
+    "contribution": null
   },
   {
     "id": "gingerbread",
@@ -234,7 +358,13 @@ export const places=[
     "description": "Team up with kits, frosting, and candy; vote on the coziest creation.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "About $20",
+    "includes": "Estimated kits, candy and frosting shared in teams; table covers included in the supply plan.",
+    "duration": "90–120 minutes",
+    "group": "4–10",
+    "plan": "Split into pairs, allow 45 minutes to build, then vote on funniest, coziest and most ambitious.",
+    "contribution": 10
   },
   {
     "id": "cookie-swap",
@@ -244,7 +374,13 @@ export const places=[
     "description": "Bring or bake cookies, decorate together, then take a mixed box home.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "About $20",
+    "includes": "Estimated dough, icing, toppings and takeaway boxes; shared supplies rather than a bakery quote.",
+    "duration": "2–3 hours",
+    "group": "4–10",
+    "plan": "Bake ahead to avoid oven queues. Label ingredients and give everyone a mixed box to take home.",
+    "contribution": 10
   },
   {
     "id": "movie-night",
@@ -254,7 +390,13 @@ export const places=[
     "description": "Pick two favorites, make popcorn, and set up a hot-chocolate station.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "$5–15",
+    "includes": "Popcorn, cocoa and snacks; assumes the host already has lawful access to the chosen films.",
+    "duration": "3–4 hours",
+    "group": "4–10",
+    "plan": "Vote on two movies in advance. Add an intermission for snacks and a blanket corner.",
+    "contribution": null
   },
   {
     "id": "holiday-games",
@@ -264,7 +406,13 @@ export const places=[
     "description": "Christmas trivia, charades, and a playlist guessing game.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "$0–10",
+    "includes": "Use games already owned; optional snacks and small prizes.",
+    "duration": "2–3 hours",
+    "group": "4–12",
+    "plan": "Rotate trivia, charades and music guessing in short rounds so everyone gets a turn.",
+    "contribution": null
   },
   {
     "id": "craft-night",
@@ -274,7 +422,237 @@ export const places=[
     "description": "Make ornaments and handwritten cards with a shared craft kit.",
     "note": "At-home idea, not a booked event. Ryan will coordinate a host and supplies.",
     "cost": "Shared supplies",
-    "url": ""
+    "url": "",
+    "price": "$10–15",
+    "includes": "Paper, blank ornaments, ribbon, markers and shared glue supplies.",
+    "duration": "90–120 minutes",
+    "group": "4–8",
+    "plan": "Set out two craft stations and a drying area; make cards while ornaments dry.",
+    "contribution": null
+  },
+  {
+    "id": "serendipity",
+    "category": "cocoa",
+    "title": "Serendipity3 dessert stop",
+    "place": "Upper East Side or Times Square",
+    "description": "A frozen-hot-chocolate outing with a very festive dessert energy.",
+    "note": "Reserve at the intended branch; check any minimum-spend policy.",
+    "url": "https://serendipity3.com/menu/",
+    "cost": "Plan together",
+    "price": "$20–30",
+    "includes": "Original frozen hot chocolate is listed at $15.95 before tax/tip. Budget more for another dessert.",
+    "duration": "45–75 minutes",
+    "group": "2–6",
+    "plan": "Choose one specialty drink each, or ask about sharing rules before ordering.",
+    "contribution": null
+  },
+  {
+    "id": "lightscape",
+    "category": "lights",
+    "title": "Lightscape at Brooklyn Botanic Garden",
+    "place": "Prospect Heights · Brooklyn",
+    "description": "Walk a garden trail filled with illuminated art, color and music.",
+    "note": "Nov 20, 2026–Jan 3, 2027. Dec 10 and 17 are listed as 21+ nights; choose another night for a mixed-age group.",
+    "url": "https://www.bbg.org/lightscape",
+    "cost": "Plan together",
+    "price": "$30–50",
+    "includes": "Planning allowance only; peak/value-night ticket prices need checking. Food and transport extra.",
+    "duration": "90–120 minutes",
+    "group": "4–8",
+    "plan": "Book one entry window, dress for a continuous outdoor walk, and allow Brooklyn travel time.",
+    "contribution": null
+  },
+  {
+    "id": "skyline-ferry",
+    "category": "lights",
+    "title": "Skyline ferry ride",
+    "place": "Whitehall Terminal → St. George → back",
+    "description": "Watch the skyline from the Staten Island Ferry, then warm up with a drink.",
+    "note": "Not a Christmas light installation. Ferry service and weather determine the outing.",
+    "url": "https://www.nyc.gov/html/dot/html/ferrybus/sif-traveler-info.shtml",
+    "cost": "Plan together",
+    "price": "$0; $5–15 optional warm drink",
+    "includes": "The Staten Island Ferry is free. Do not confuse it with paid NYC Ferry routes.",
+    "duration": "60–90 minutes round trip including transfer",
+    "group": "3–8",
+    "plan": "Disembark and re-board at the other terminal; use indoor seating when cold and check service notices.",
+    "contribution": null
+  },
+  {
+    "id": "dumbo-walk",
+    "category": "lights",
+    "title": "DUMBO skyline photo walk",
+    "place": "Brooklyn Bridge Park",
+    "description": "A waterfront photo scavenger hunt with bridge views and warm drinks afterward.",
+    "note": "A winter outing, not a promised seasonal light show. Wind and rain can make it uncomfortable.",
+    "url": "https://brooklynbridgepark.org/about/",
+    "cost": "Plan together",
+    "price": "$0; $5–15 optional warm drink",
+    "includes": "Self-guided park walk; café purchases and transport extra.",
+    "duration": "60–90 minutes",
+    "group": "3–8",
+    "plan": "Give teams five photo prompts, meet near the waterfront, and finish with a café stop before it closes.",
+    "contribution": null
+  },
+  {
+    "id": "icecream-museum",
+    "category": "creative",
+    "title": "Museum of Ice Cream",
+    "place": "SoHo · 558 Broadway",
+    "description": "Playful installations, photos and ice cream for an indoor evening.",
+    "note": "Check the final entry time; weekends can sell out. Not specifically Christmas-themed.",
+    "url": "https://www.museumoficecream.com/nyc/",
+    "cost": "Plan together",
+    "price": "$40–65 planning allowance",
+    "includes": "Official general admission starts at $39 and includes ice cream; prices vary by day/time.",
+    "duration": "60–90 minutes",
+    "group": "3–8",
+    "plan": "Book the same slot and ask about dietary accommodations before purchasing.",
+    "contribution": null
+  },
+  {
+    "id": "color-factory",
+    "category": "creative",
+    "title": "Color Factory",
+    "place": "SoHo · 251 Spring Street",
+    "description": "An interactive art outing with colorful rooms and group photos.",
+    "note": "Check ticket availability and entry times. Not specifically Christmas-themed.",
+    "url": "https://www.colorfactory.co/locations/new-york-city",
+    "cost": "Plan together",
+    "price": "$40–60 planning allowance",
+    "includes": "Estimated ticket budget; use the live booking calendar for the current price.",
+    "duration": "60–90 minutes",
+    "group": "3–8",
+    "plan": "Pick a shared time slot and leave extra time for photos; compare ticket conditions before booking.",
+    "contribution": null
+  },
+  {
+    "id": "uncommons",
+    "category": "creative",
+    "title": "The Uncommons board-game café",
+    "place": "Greenwich Village",
+    "description": "Choose cooperative or competitive tabletop games over warm drinks.",
+    "note": "Reserve for the group; confirm session length and the current gaming fee.",
+    "url": "https://uncommonsnyc.com/faq/",
+    "cost": "Plan together",
+    "price": "About $20",
+    "includes": "Planning budget for the gaming fee plus a simple drink; current exact fee must be confirmed.",
+    "duration": "2–3 hours",
+    "group": "4–6",
+    "plan": "Start with a quick game, then one longer team game. Ask staff for an approachable recommendation.",
+    "contribution": 10
+  },
+  {
+    "id": "pottery-uws",
+    "category": "creative",
+    "title": "Paint pottery at Color Me Mine",
+    "place": "Upper West Side · 177 Amsterdam Avenue",
+    "description": "Paint a mug or seasonal gift, then collect it after firing.",
+    "note": "Reserve a table. Finished work is listed as ready in 1–2 weeks; groups over six have an 18% gratuity.",
+    "url": "https://upperwestside.colormemine.com/visit-studio/",
+    "cost": "Plan together",
+    "price": "$40–65+",
+    "includes": "Official $16 studio fee plus pottery from $22: minimum $38 before tax and any group gratuity.",
+    "duration": "90–120 minutes",
+    "group": "3–6",
+    "plan": "Choose a small piece to keep costs predictable. Arrange one person to collect the finished pottery.",
+    "contribution": null
+  },
+  {
+    "id": "eataly",
+    "category": "food",
+    "title": "Eataly snack-and-gift wander",
+    "place": "Flatiron",
+    "description": "Browse Italian treats, choose a few snacks and build a mini holiday tasting.",
+    "note": "Counter and restaurant hours differ; this is a DIY tasting, not an official package.",
+    "url": "https://www.eataly.com/us_en/stores",
+    "cost": "Plan together",
+    "price": "$15–30",
+    "includes": "Self-set snack budget, excluding a sit-down dinner or gift shopping.",
+    "duration": "60–90 minutes",
+    "group": "3–6",
+    "plan": "Each person chooses one shareable treat. Check allergens and ask where food can be eaten.",
+    "contribution": null
+  },
+  {
+    "id": "soup-night",
+    "category": "home",
+    "title": "Soup & grilled-cheese night",
+    "place": "At a friend’s home · host to be decided",
+    "description": "A cozy dinner with two soups and a grilled-cheese station.",
+    "note": "At-home idea; coordinate a host, supplies and dietary needs before confirming.",
+    "url": "",
+    "cost": "Shared supplies",
+    "price": "About $20",
+    "includes": "Groceries for a shared meal; assumes basic cooking equipment at home.",
+    "duration": "3 hours",
+    "group": "6–10",
+    "plan": "Choose one vegetarian soup; prep soups ahead, then cook sandwiches in small batches.",
+    "contribution": 10
+  },
+  {
+    "id": "holiday-mystery",
+    "category": "home",
+    "title": "Christmas murder-mystery dinner",
+    "place": "At a friend’s home · host to be decided",
+    "description": "A fictional holiday whodunit with characters, clue cards and dinner.",
+    "note": "At-home idea; coordinate a host, supplies and dietary needs before confirming.",
+    "url": "",
+    "cost": "Shared supplies",
+    "price": "$10–25",
+    "includes": "DIY or purchased game kit split among the group plus simple food; commercial kit prices vary.",
+    "duration": "3–4 hours",
+    "group": "6–10",
+    "plan": "Pick an age-appropriate kit, send roles early, and make costumes optional.",
+    "contribution": null
+  },
+  {
+    "id": "cocoa-flight",
+    "category": "home",
+    "title": "Hot-chocolate tasting at home",
+    "place": "At a friend’s home · host to be decided",
+    "description": "Compare classic, peppermint and spiced cocoa with a toppings bar.",
+    "note": "At-home idea; coordinate a host, supplies and dietary needs before confirming.",
+    "url": "",
+    "cost": "Shared supplies",
+    "price": "$5–12",
+    "includes": "Milk or alternatives, cocoa, toppings and small tasting cups.",
+    "duration": "60–90 minutes",
+    "group": "4–10",
+    "plan": "Make small portions, label allergens, and score each flavor before revealing the winner.",
+    "contribution": null
+  },
+  {
+    "id": "powerpoint",
+    "category": "home",
+    "title": "Holiday PowerPoint party",
+    "place": "At a friend’s home · host to be decided",
+    "description": "Five-minute presentations on the funniest holiday opinions.",
+    "note": "At-home idea; coordinate a host, supplies and dietary needs before confirming.",
+    "url": "",
+    "cost": "Shared supplies",
+    "price": "$0–10",
+    "includes": "Use an existing laptop/screen; optional snacks.",
+    "duration": "2–3 hours",
+    "group": "4–10",
+    "plan": "Set a five-slide limit and themes such as best Christmas movie villain or ranking holiday snacks.",
+    "contribution": null
+  },
+  {
+    "id": "wrapping",
+    "category": "home",
+    "title": "Gift-wrapping & playlist night",
+    "place": "At a friend’s home · host to be decided",
+    "description": "Wrap presents together with a shared ribbon-and-paper station.",
+    "note": "At-home idea; coordinate a host, supplies and dietary needs before confirming.",
+    "url": "",
+    "cost": "Shared supplies",
+    "price": "$5–12",
+    "includes": "Wrapping paper, tape, tags and ribbon only; presents are not included.",
+    "duration": "90–120 minutes",
+    "group": "4–8",
+    "plan": "Bring your own gifts. Set up a recyclable offcut pile and a separate card-writing corner.",
+    "contribution": null
   }
 ];
 export const validPlaceIds=new Set(places.map(p=>p.id));
