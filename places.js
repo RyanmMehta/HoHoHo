@@ -1,18 +1,18 @@
 import {categories,places} from './places-data.js';
 const draftKey='hohoho-places-draft-v1';
 const el=(tag,text,className)=>{const node=document.createElement(tag);if(text)node.textContent=text;if(className)node.className=className;return node};
-export async function renderPlaces(container){
+export async function renderPlaces(container,identity){
  container.innerHTML='<div class="calendar-eyebrow">A LITTLE HOLIDAY WISH LIST</div><h1 tabindex="-1">Places to go. Things to do.</h1><p class="places-intro">Pick an activity, then the places or plans you’d love. Choose as many as you like.</p><div class="places-body"><p role="status">Loading your choices…</p></div>';
  const body=container.querySelector('.places-body');
  let saved;
- try{const response=await fetch('/api/preferences',{cache:'no-store'});if(!response.ok)throw new Error();saved=(await response.json()).preference}catch{body.replaceChildren(el('p','Could not load your choices. Please try again.'));const retry=el('button','Try again','continue');retry.onclick=()=>renderPlaces(container);body.append(retry);return}
+ try{const response=await fetch('/api/preferences',{cache:'no-store'});if(!response.ok)throw new Error();saved=(await response.json()).preference}catch{body.replaceChildren(el('p','Could not load your choices. Please try again.'));const retry=el('button','Try again','continue');retry.onclick=()=>renderPlaces(container,identity);body.append(retry);return}
  let draft;try{draft=JSON.parse(localStorage.getItem(draftKey)||'null')}catch{}
  let name=saved?.name||'';try{name=name||localStorage.getItem('hohoho-guest-name')||''}catch{}
  const chosen=new Set((draft?.choices||saved?.choices||[]).filter(id=>places.some(p=>p.id===id)));
- if(draft?.name)name=draft.name;
+ if(identity?.name)name=identity.name;
  let active=categories[0].id;
  body.innerHTML='<p class="places-private budget-intro">Budgets are per person. On selected ~$20 plans, the suggested friend contribution is $10 and Ryan plans to cover the rest. Other estimates exclude transport, tax, tips and optional extras unless noted. Final costs are confirmed before booking.</p><label class="places-name">Your name<input id="places-name" autocomplete="name" maxlength="80" required placeholder="First and last name"></label><p class="places-private">Only Ryan can see your choices. Return in this browser to update them.</p><h2 class="step-heading">1. What sounds fun?</h2><div class="activity-tabs" role="group" aria-label="Activities"></div><h2 class="step-heading" id="place-step">2. Choose your places</h2><div class="place-options"></div><section class="place-summary"><h2>Your wish list</h2><div class="picked-options"></div><p class="places-status" role="status" aria-live="polite"></p><button class="continue save-places">Save my choices →</button><p class="places-private">This shares your interests, not a booking. Outings may need an earlier start than 7 p.m. Check venue hours before making plans.</p></section><p class="places-research">Venue details checked Oct 29, 2026 · Official sources linked on each card.</p>';
- const input=body.querySelector('input');input.value=name;
+ const input=body.querySelector('input');input.value=name;input.readOnly=true;const change=el('button','Change name','edit-dates');change.type='button';change.onclick=()=>identity.changeName();body.querySelector('.places-name').after(change);
  const status=body.querySelector('.places-status');
  const stash=()=>{status.textContent='Unsaved changes';try{localStorage.setItem(draftKey,JSON.stringify({name:input.value,choices:[...chosen]}))}catch{status.textContent='Unsaved changes — keep this page open until you save.'}};
  input.oninput=stash;

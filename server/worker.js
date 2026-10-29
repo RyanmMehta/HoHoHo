@@ -43,6 +43,21 @@ async function api(request,env){
  const url=new URL(request.url),path=url.pathname;
  if(!env.DB)return json({error:'Storage is not configured yet.'},503);
  if(request.method==='POST'&&request.headers.get('Origin')!==url.origin)return json({error:'Request origin not allowed.'},403);
+ if(path==='/api/guest'&&request.method==='POST'){
+  const data=validatePreferences({...await body(request),choices:[]});if(!data)return json({error:'Please enter a valid name.'},400);
+  const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'guest:'+ip,60,3600))return json({error:'Too many updates. Please try again later.'},429);
+  let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();const key=await hash(raw),now=Date.now();
+  await env.DB.batch([
+   env.DB.prepare('INSERT INTO guests(edit_hash,name,updated_at) VALUES(?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at').bind(key,data.name,now),
+   env.DB.prepare('UPDATE responses SET name=?,updated_at=MAX(updated_at+1,?) WHERE edit_hash=?').bind(data.name,now,key),
+   env.DB.prepare('UPDATE preferences SET name=?,updated_at=MAX(updated_at+1,?) WHERE edit_hash=?').bind(data.name,now,key)
+  ]);
+  return json({ok:true,name:data.name},200,{'Set-Cookie':cookie(request,'hoho_guest',raw,60*60*24*120)});
+ }
+ if(path==='/api/admin/guests'&&request.method==='GET'){
+  if(!await session(request,env))return json({error:'Sign in to view guests.'},401);
+  const rows=await env.DB.prepare('SELECT name,updated_at FROM guests ORDER BY updated_at DESC').all();return json({guests:rows.results});
+ }
  if(path==='/api/preferences'&&request.method==='GET'){
   const raw=cookies(request).hoho_guest;
   if(!raw||!/^[a-f0-9]{64}$/.test(raw))return json({preference:null});
@@ -52,7 +67,7 @@ async function api(request,env){
  if(path==='/api/preferences'&&request.method==='POST'){
   const data=validatePreferences(await body(request));if(!data)return json({error:'Enter your name and choose valid activities.'},400);
   const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'preferences:'+ip,60,3600))return json({error:'Too many updates. Please try again later.'},429);
-  let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();const now=Date.now();
+  let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();const now=Date.now();const profile=await env.DB.prepare('SELECT name FROM guests WHERE edit_hash=?').bind(await hash(raw)).first();if(profile)data.name=profile.name;
   await env.DB.prepare('INSERT INTO preferences(id,edit_hash,name,choices,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,choices=excluded.choices,updated_at=MAX(preferences.updated_at+1,excluded.updated_at)').bind(crypto.randomUUID(),await hash(raw),data.name,JSON.stringify(data.choices),now).run();
   return json({ok:true},200,{'Set-Cookie':cookie(request,'hoho_guest',raw,60*60*24*120)});
  }
@@ -74,7 +89,7 @@ async function api(request,env){
   const data=validateResponse(await body(request));if(!data)return json({error:'Enter a name and valid Thursday–Sunday dates in November or December 2026.'},400);
   const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'submit:'+ip,60,3600))return json({error:'Too many submissions. Try again later.'},429);
   let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();
-  const editHash=await hash(raw),now=Date.now();
+  const editHash=await hash(raw),now=Date.now();const profile=await env.DB.prepare('SELECT name FROM guests WHERE edit_hash=?').bind(editHash).first();if(profile)data.name=profile.name;
   const saved=await env.DB.prepare(`INSERT INTO responses(id,edit_hash,name,dates,created_at,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,dates=excluded.dates,updated_at=MAX(responses.updated_at+1,excluded.updated_at) WHERE responses.deleted_at IS NULL`).bind(crypto.randomUUID(),editHash,data.name,JSON.stringify(data.dates),now,now).run();
   if(!saved.meta.changes)return json({error:'This response has been removed by the host. Please contact Ryan.'},409);
   return json({ok:true},200,{'Set-Cookie':cookie(request,'hoho_guest',raw,60*60*24*120)});

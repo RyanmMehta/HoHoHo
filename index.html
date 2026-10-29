@@ -160,7 +160,7 @@ replay.addEventListener('click',()=>{document.body.classList.remove('opened','op
 
 const destination=document.querySelector('.destination'), heading=destination.querySelector('h1');let travelling=false;let selectedRow=null;
 async function travel(row){
- if(travelling)return;travelling=true;selectedRow=row;
+ if(travelling)return;if(!nameConfirmed){selectedRow=row;destination.classList.add('active','party');destination.setAttribute('aria-hidden','false');reveal.inert=true;renderName(()=>{destination.classList.remove('active');destination.setAttribute('aria-hidden','true');reveal.inert=false;travel(row)});return}travelling=true;selectedRow=row;
  const deer=row.querySelector('.deer'),note=row.querySelector('.note');
  reveal.classList.add('departing');row.classList.add('running');reveal.inert=true;
  const distance=window.innerWidth-row.getBoundingClientRect().left+80;
@@ -177,7 +177,7 @@ function returnToMenu(){if(selectedRow)selectedRow.style.visibility='';destinati
 document.querySelector('.back-menu').addEventListener('click',()=>{returnToMenu();history.replaceState(null,'',location.pathname+location.search)});
 window.addEventListener('popstate',()=>{if(['#party-plans','#places-to-go'].includes(location.hash)){renderPage(location.hash.slice(1))}else{returnToMenu()}});
 
-const selectedDates=new Set();let calendarMonth=10;let guestName='';try{guestName=localStorage.getItem('hohoho-guest-name')||''}catch{}
+const selectedDates=new Set();let calendarMonth=10;let nameConfirmed=false;let guestName='';try{guestName=localStorage.getItem('hohoho-guest-name')||''}catch{}
 const storageKey='hohoho-availability-nov-dec-2026';
 const dateKey=(month,day)=>`2026-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
 const parseDate=key=>{const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)};
@@ -185,12 +185,12 @@ try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isAr
 const content=destination.querySelector('.destination-content');
 function renderPage(page){
  destination.classList.add('party');destination.classList.toggle('places-page',page==='places-to-go');
- if(page==='places-to-go'){renderPlaces(content);return}
- if(!guestName){renderName();return}
+ if(!nameConfirmed){renderName(()=>renderPage(page));return}
+ if(page==='places-to-go'){renderPlaces(content,{name:guestName,changeName:()=>renderName(()=>renderPage(page))});return}
  const november=calendarMonth===10,month=november?'November':'December';
  content.innerHTML=`<button class="change-name edit-dates">Change name</button><div class="calendar-eyebrow">LET’S MAKE MERRY · ${november?'1':'2'} OF 2</div><h1 tabindex="-1">Click the days you are available</h1><p class="privacy-note">7 p.m.–midnight · New York time · ends the following day</p><a class="calendar-link" href="https://calendar.google.com/calendar/u/0/r/month/2026/${calendarMonth+1}/1" target="_blank" rel="noopener noreferrer">Check your Google Calendar here ↗</a><div class="calendar-card"><div class="month-title"><h2>${month} 2026</h2><span>’tis the season <b class="holly" aria-hidden="true">✦</b></span></div><div class="calendar-grid" role="group" aria-label="${month} 2026 availability"></div><div class="calendar-key">Thursday–Sunday · pick all the days that work</div></div><p class="calendar-status" aria-live="polite"></p><button class="continue">${november?'Next to December →':'Submit availability →'}</button>${november?'':'<button class="previous-month edit-dates">← back to November</button>'}<button class="clear-dates edit-dates">Clear ${month} selection</button><p class="privacy-note">Your name and selected evenings will be sent privately to Ryan when you submit.</p><section class="announced-hangouts"><h2>Upcoming hangouts</h2><div class="hangout-list"></div></section>`;
  renderHangouts(content.querySelector('.hangout-list'));
- content.querySelector('.change-name').addEventListener('click',renderName);
+ content.querySelector('.change-name').addEventListener('click',()=>renderName(()=>renderPage('party-plans')));
  content.querySelector('.clear-dates').addEventListener('click',()=>{for(const key of selectedDates)if(parseDate(key).getMonth()===calendarMonth)selectedDates.delete(key);saveDates();renderPage('party-plans')});
  const grid=content.querySelector('.calendar-grid');
  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach((day,i)=>{const label=document.createElement('div');label.className='weekday'+(i>=3?' marked':'');label.textContent=day;grid.append(label)});
@@ -201,10 +201,11 @@ function renderPage(page){
  content.querySelector('.continue').addEventListener('click',()=>{if(november){saveDates();calendarMonth=11;renderPage('party-plans');destination.scrollTop=0;content.querySelector('h1').focus({preventScroll:true})}else if(selectedDates.size){submitAvailability()}});
  content.querySelector('.previous-month')?.addEventListener('click',()=>{calendarMonth=10;renderPage('party-plans');destination.scrollTop=0});updateSelection();
 }
-function renderName(){
- content.innerHTML='<form class="name-form"><div class="calendar-eyebrow">A SEAT AT THE TABLE</div><h1 tabindex="-1">First, what’s your name?</h1><p>So we know who’s joining the holiday cheer.</p><label for="guest-name">Your name</label><input id="guest-name" name="name" autocomplete="name" required maxlength="80" placeholder="Your first and last name"><p class="name-error" role="alert"></p><button class="continue" type="submit">Choose my dates →</button><p class="privacy-note">Ryan will see your name and available dates. Other guests cannot view your response.</p></form>';
- const input=content.querySelector('input');input.value=guestName;
- content.querySelector('form').addEventListener('submit',event=>{event.preventDefault();const value=input.value.trim().replace(/\s+/g,' ');if(!value){content.querySelector('.name-error').textContent='Please enter your name.';input.focus();return}guestName=value;try{localStorage.setItem('hohoho-guest-name',guestName)}catch{}renderPage('party-plans');destination.scrollTop=0;content.querySelector('h1').focus({preventScroll:true})});
+function renderName(onDone=()=>renderPage('party-plans')){
+ destination.classList.remove('places-page');
+ content.innerHTML='<form class="name-form"><div class="calendar-eyebrow">A SEAT AT THE TABLE</div><h1 tabindex="-1">First, what’s your name?</h1><p>One name for all your holiday plans.</p><label for="guest-name">Your name</label><input id="guest-name" name="name" autocomplete="name" required maxlength="80" placeholder="Your first and last name"><p class="name-error" role="alert"></p><button class="continue" type="submit">Save my name & continue →</button><p class="privacy-note">Ryan will see your name, availability and activity choices. Your name is remembered in this browser. Changing it updates this browser’s existing responses.</p></form>';
+ const input=content.querySelector('input');input.value=guestName;destination.scrollTop=0;input.focus({preventScroll:true});
+ content.querySelector('form').addEventListener('submit',async event=>{event.preventDefault();const value=input.value.trim().replace(/\s+/g,' '),error=content.querySelector('.name-error'),button=content.querySelector('.continue');if(!value){error.textContent='Please enter your name.';input.focus();return}button.disabled=true;button.textContent='Saving…';error.textContent='';try{const response=await fetch('/api/guest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:value})});const result=await response.json();if(!response.ok)throw new Error(result.error||'Unable to save your name.');guestName=result.name;nameConfirmed=true;try{localStorage.setItem('hohoho-guest-name',guestName)}catch{}onDone();destination.scrollTop=0;content.querySelector('h1')?.focus({preventScroll:true})}catch(e){error.textContent='Could not save your name. '+(e.message==='Failed to fetch'?'Please check your connection and try again.':e.message);button.disabled=false;button.textContent='Save my name & continue →'}});
 }
 function saveDates(){try{localStorage.setItem(storageKey,JSON.stringify([...selectedDates]));return true}catch{return false}}
 function updateSelection(){const count=selectedDates.size,monthCount=[...selectedDates].filter(key=>parseDate(key).getMonth()===calendarMonth).length;content.querySelector('.calendar-status').textContent=`${monthCount} ${monthCount===1?'day':'days'} selected this month · ${count} total`;content.querySelector('.continue').disabled=calendarMonth===11&&!count}
