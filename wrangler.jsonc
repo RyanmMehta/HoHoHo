@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hohoho-ryan",
+  "account_id":"b390d03e8af25b3acc5e4c8a47235734",
+  "main": "server/worker.js",
+  "compatibility_date": "2026-10-29",
+  "assets": {"directory":"./dist", "binding":"ASSETS", "run_worker_first":true},
+  "d1_databases": [{"binding":"DB", "database_name":"hohoho-responses", "database_id":"d1bc47d1-d15f-457f-9def-1e78d5f90637", "migrations_dir":"migrations"}],
+  "observability": {"enabled":true,"traces":{"enabled":true}},
+  "vars": {"ADMIN_NAME":"Ryan Mehta"}
+}
