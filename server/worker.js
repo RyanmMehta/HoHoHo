@@ -36,6 +36,15 @@ async function api(request,env){
  const url=new URL(request.url),path=url.pathname;
  if(!env.DB)return json({error:'Storage is not configured yet.'},503);
  if(request.method==='POST'&&request.headers.get('Origin')!==url.origin)return json({error:'Request origin not allowed.'},403);
+ if(path==='/api/hangouts'&&request.method==='GET'){
+  const rows=await env.DB.prepare('SELECT id,title,date,location FROM hangouts ORDER BY date').all();return json({hangouts:rows.results});
+ }
+ if(path==='/api/admin/hangouts'&&request.method==='POST'){
+  if(!await session(request,env))return json({error:'Sign in to publish a hangout.'},401);
+  const data=await body(request);
+  if(typeof data.title!=='string'||!data.title.trim()||data.title.length>100||typeof data.location!=='string'||data.location.length>200||!validateResponse({name:'Hangout',dates:[data.date]}))return json({error:'Enter a title, location and a Thursday–Sunday date in November or December 2026.'},400);
+  await env.DB.prepare('INSERT INTO hangouts(id,title,date,location,created_at) VALUES(?,?,?,?,?)').bind(crypto.randomUUID(),data.title.trim(),data.date,data.location.trim(),Date.now()).run();return json({ok:true});
+ }
  if(path==='/api/responses'&&request.method==='POST'){
   const data=validateResponse(await body(request));if(!data)return json({error:'Enter a name and valid Thursday–Sunday dates in November or December 2026.'},400);
   const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'submit:'+ip,60,3600))return json({error:'Too many submissions. Try again later.'},429);

@@ -6,7 +6,7 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {validateResponse} from '../server/worker.js';
 let mf,db;
 const password='test-password-only';const salt=randomBytes(16);const digest=pbkdf2Sync(password,salt,100000,32,'sha256').toString('hex');
-before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modules:true,scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
+before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modules:true,scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql','0003_hangouts.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
 after(()=>mf?.dispose());
 const request=(path,data,cookie='',origin='https://example.com',ip='test')=>mf.dispatchFetch('https://example.com'+path,{method:data?'POST':'GET',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie,'CF-Connecting-IP':ip},body:data?JSON.stringify(data):undefined});
 const cookieOf=r=>r.headers.get('set-cookie').split(';')[0];
@@ -35,4 +35,13 @@ test('host edits, optimistic concurrency, recoverable trash and guest isolation'
  assert.equal((await request('/api/responses',{name:'Management resurrected',dates:['2026-11-05']},guestCookie)).status,409);
  assert.equal((await request(path+'/restore',{updated_at:row.updated_at},cookie)).status,200);
  row=await getRow();assert.equal(row.deleted_at,null);assert.equal(row.name,'Management edited');
+});
+
+test('only host can publish valid hangouts; public listing contains event details only',async()=>{
+ const event={title:'Movie night',date:'2026-12-31',location:'TBC'};
+ assert.equal((await request('/api/admin/hangouts',event)).status,401);
+ const login=await request('/api/admin/login',{username:'Ryan Mehta',password},'','https://example.com','hangouts');const cookie=cookieOf(login);
+ assert.equal((await request('/api/admin/hangouts',{...event,date:'2026-11-02'},cookie)).status,400);
+ assert.equal((await request('/api/admin/hangouts',event,cookie)).status,200);
+ const result=await (await request('/api/hangouts')).json();assert.equal(result.hangouts[0].title,event.title);assert.equal(result.hangouts[0].date,event.date);
 });

@@ -1,0 +1,1 @@
+CREATE TABLE hangouts (id TEXT PRIMARY KEY, title TEXT NOT NULL, date TEXT NOT NULL, location TEXT NOT NULL, created_at INTEGER NOT NULL);
