@@ -6,7 +6,7 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {validateResponse} from '../server/worker.js';
 let mf,db;
 const password='test-password-only';const salt=randomBytes(16);const digest=pbkdf2Sync(password,salt,100000,32,'sha256').toString('hex');
-before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modules:true,scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql','0003_hangouts.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
+before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modulesRoot:new URL('../',import.meta.url).pathname,modules:[{type:'ESModule',path:new URL('../server/worker.js',import.meta.url).pathname},{type:'ESModule',path:new URL('../places-data.js',import.meta.url).pathname}],scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql','0003_hangouts.sql','0004_preferences.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
 after(()=>mf?.dispose());
 const request=(path,data,cookie='',origin='https://example.com',ip='test')=>mf.dispatchFetch('https://example.com'+path,{method:data?'POST':'GET',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie,'CF-Connecting-IP':ip},body:data?JSON.stringify(data):undefined});
 const cookieOf=r=>r.headers.get('set-cookie').split(';')[0];
@@ -44,4 +44,21 @@ test('only host can publish valid hangouts; public listing contains event detail
  assert.equal((await request('/api/admin/hangouts',{...event,date:'2026-11-02'},cookie)).status,400);
  assert.equal((await request('/api/admin/hangouts',event,cookie)).status,200);
  const result=await (await request('/api/hangouts')).json();assert.equal(result.hangouts[0].title,event.title);assert.equal(result.hangouts[0].date,event.date);
+});
+
+test('activity preferences persist privately, replace votes, and allow clearing',async()=>{
+ const payload={name:'Preference guest',choices:['angelina','white-elephant','angelina']};
+ assert.equal((await request('/api/preferences',{...payload,choices:['invented']})).status,400);
+ assert.equal((await request('/api/preferences',payload,'','https://evil.example')).status,403);
+ const saved=await request('/api/preferences',payload);assert.equal(saved.status,200);const own=cookieOf(saved);
+ assert.deepEqual((await (await request('/api/preferences',null,own)).json()).preference.choices,['angelina','white-elephant']);
+ assert.equal((await (await request('/api/preferences')).json()).preference,null);
+ assert.equal((await request('/api/admin/preferences',null,own)).status,401);
+ const second=await request('/api/preferences',payload);const secondCookie=cookieOf(second);
+ await request('/api/preferences',{...payload,choices:['stuytown-rink']},own);
+ assert.deepEqual((await (await request('/api/preferences',null,secondCookie)).json()).preference.choices,['angelina','white-elephant']);
+ const login=await request('/api/admin/login',{username:'Ryan Mehta',password},'','https://example.com','prefs-admin');const admin=cookieOf(login);
+ const list=await (await request('/api/admin/preferences',null,admin)).json();assert.equal(list.preferences.length,2);assert.ok(list.preferences.every(r=>!('edit_hash' in r)));
+ await request('/api/preferences',{...payload,choices:[]},own);
+ assert.deepEqual((await (await request('/api/preferences',null,own)).json()).preference.choices,[]);
 });

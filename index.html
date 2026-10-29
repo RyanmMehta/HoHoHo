@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><link rel="stylesheet" href="/places.css">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HoHoHo · A little something for you</title>
 <meta name="description" content="A little Christmas surprise with Ryan.">
@@ -151,6 +151,7 @@
 </section>
 <section class="destination" aria-hidden="true"><button class="back-menu">← back to our plans</button><div class="destination-content"><span class="tiny-star" aria-hidden="true">✧</span><h1 tabindex="-1"></h1><p>our little list starts here.</p></div></section>
 <script type="module">
+import {renderPlaces} from "/places.js";
 import {renderHangouts} from "/calendar.js";
 const gift=document.querySelector('.gift'),replay=document.querySelector('.replay'),reveal=document.querySelector('.reveal');let opening=false;const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
 for(let i=0;i<8;i++){const s=document.createElement('span');s.className='spark';s.textContent=i%3?'✦':'✧';const a=i/8*Math.PI*2;s.style.setProperty('--x',`${Math.cos(a)*(90+i%4*24)}px`);s.style.setProperty('--y',`${Math.sin(a)*110-70}px`);document.querySelector('.burst').append(s)}
@@ -174,7 +175,7 @@ async function travel(row){
 document.querySelectorAll('.menu-row:not(:disabled)').forEach(row=>row.addEventListener('click',()=>travel(row)));
 function returnToMenu(){if(selectedRow)selectedRow.style.visibility='';destination.classList.remove('active');destination.setAttribute('aria-hidden','true');reveal.classList.remove('departing');reveal.setAttribute('aria-hidden','false');reveal.inert=false;if(selectedRow)selectedRow.focus({preventScroll:true});}
 document.querySelector('.back-menu').addEventListener('click',()=>{returnToMenu();history.replaceState(null,'',location.pathname+location.search)});
-window.addEventListener('popstate',()=>{if(location.hash==='#party-plans'){renderPage('party-plans')}else{returnToMenu()}});
+window.addEventListener('popstate',()=>{if(['#party-plans','#places-to-go'].includes(location.hash)){renderPage(location.hash.slice(1))}else{returnToMenu()}});
 
 const selectedDates=new Set();let calendarMonth=10;let guestName='';try{guestName=localStorage.getItem('hohoho-guest-name')||''}catch{}
 const storageKey='hohoho-availability-nov-dec-2026';
@@ -183,8 +184,8 @@ const parseDate=key=>{const [y,m,d]=key.split('-').map(Number);return new Date(y
 try{const saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(Array.isArray(saved))saved.forEach(key=>{if(typeof key==='string'&&/^2026-(11|12)-\d{2}$/.test(key)){const date=parseDate(key);if(dateKey(date.getMonth(),date.getDate())===key&&[0,4,5,6].includes(date.getDay()))selectedDates.add(key)}});const old=JSON.parse(localStorage.getItem('hohoho-availability-2026')||'[]');if(!localStorage.getItem(storageKey)&&Array.isArray(old))old.forEach(d=>{if(Number.isInteger(d)&&d>=1&&d<=31&&[0,4,5,6].includes(new Date(2026,11,d).getDay()))selectedDates.add(dateKey(11,d))})}catch{}
 const content=destination.querySelector('.destination-content');
 function renderPage(page){
- destination.classList.toggle('party',page==='party-plans');
- if(page!=='party-plans'){content.innerHTML='<span class="tiny-star" aria-hidden="true">✧</span><h1 tabindex="-1">Places to Go</h1><p>our little list starts here.</p>';return}
+ destination.classList.add('party');destination.classList.toggle('places-page',page==='places-to-go');
+ if(page==='places-to-go'){renderPlaces(content);return}
  if(!guestName){renderName();return}
  const november=calendarMonth===10,month=november?'November':'December';
  content.innerHTML=`<button class="change-name edit-dates">Change name</button><div class="calendar-eyebrow">LET’S MAKE MERRY · ${november?'1':'2'} OF 2</div><h1 tabindex="-1">Click the days you are available</h1><p class="privacy-note">7 p.m.–midnight · New York time · ends the following day</p><a class="calendar-link" href="https://calendar.google.com/calendar/u/0/r/month/2026/${calendarMonth+1}/1" target="_blank" rel="noopener noreferrer">Check your Google Calendar here ↗</a><div class="calendar-card"><div class="month-title"><h2>${month} 2026</h2><span>’tis the season <b class="holly" aria-hidden="true">✦</b></span></div><div class="calendar-grid" role="group" aria-label="${month} 2026 availability"></div><div class="calendar-key">Thursday–Sunday · pick all the days that work</div></div><p class="calendar-status" aria-live="polite"></p><button class="continue">${november?'Next to December →':'Submit availability →'}</button>${november?'':'<button class="previous-month edit-dates">← back to November</button>'}<button class="clear-dates edit-dates">Clear ${month} selection</button><p class="privacy-note">Your name and selected evenings will be sent privately to Ryan when you submit.</p><section class="announced-hangouts"><h2>Upcoming hangouts</h2><div class="hangout-list"></div></section>`;

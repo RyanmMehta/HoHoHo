@@ -1,3 +1,4 @@
+import {validPlaceIds} from '../places-data.js';
 const encoder=new TextEncoder();
 const json=(data,status=200,headers={})=>Response.json(data,{status,headers:{'Cache-Control':'no-store',...headers}});
 const hex=bytes=>Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
@@ -13,6 +14,12 @@ export function validateResponse(data){
  const dates=[...new Set(data.dates)];
  for(const date of dates){if(typeof date!=='string'||!/^2026-(11|12)-\d{2}$/.test(date))return null;const d=new Date(date+'T12:00:00Z');if(Number.isNaN(d.getTime())||d.toISOString().slice(0,10)!==date||![0,4,5,6].includes(d.getUTCDay()))return null}
  return {name,dates:dates.sort()};
+}
+export function validatePreferences(data){
+ if(!data||typeof data.name!=='string'||!Array.isArray(data.choices)||data.choices.length>40)return null;
+ const name=data.name.trim().replace(/\s+/g,' ');
+ if(!name||name.length>80||/[\x00-\x1f\x7f]/.test(name)||data.choices.some(id=>!validPlaceIds.has(id)))return null;
+ return {name,choices:[...new Set(data.choices)].sort()};
 }
 async function body(request){
  if(!request.headers.get('Content-Type')?.startsWith('application/json'))throw new Error('bad-body');
@@ -36,6 +43,24 @@ async function api(request,env){
  const url=new URL(request.url),path=url.pathname;
  if(!env.DB)return json({error:'Storage is not configured yet.'},503);
  if(request.method==='POST'&&request.headers.get('Origin')!==url.origin)return json({error:'Request origin not allowed.'},403);
+ if(path==='/api/preferences'&&request.method==='GET'){
+  const raw=cookies(request).hoho_guest;
+  if(!raw||!/^[a-f0-9]{64}$/.test(raw))return json({preference:null});
+  const row=await env.DB.prepare('SELECT name,choices,updated_at FROM preferences WHERE edit_hash=?').bind(await hash(raw)).first();
+  return json({preference:row?{...row,choices:JSON.parse(row.choices)}:null});
+ }
+ if(path==='/api/preferences'&&request.method==='POST'){
+  const data=validatePreferences(await body(request));if(!data)return json({error:'Enter your name and choose valid activities.'},400);
+  const ip=await hash(request.headers.get('CF-Connecting-IP')||'local');if(!await throttle(env,'preferences:'+ip,60,3600))return json({error:'Too many updates. Please try again later.'},429);
+  let raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))raw=token();const now=Date.now();
+  await env.DB.prepare('INSERT INTO preferences(id,edit_hash,name,choices,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET name=excluded.name,choices=excluded.choices,updated_at=MAX(preferences.updated_at+1,excluded.updated_at)').bind(crypto.randomUUID(),await hash(raw),data.name,JSON.stringify(data.choices),now).run();
+  return json({ok:true},200,{'Set-Cookie':cookie(request,'hoho_guest',raw,60*60*24*120)});
+ }
+ if(path==='/api/admin/preferences'&&request.method==='GET'){
+  if(!await session(request,env))return json({error:'Sign in to view preferences.'},401);
+  const rows=await env.DB.prepare('SELECT id,name,choices,updated_at FROM preferences ORDER BY updated_at DESC').all();
+  return json({preferences:rows.results.map(row=>({...row,choices:JSON.parse(row.choices)}))});
+ }
  if(path==='/api/hangouts'&&request.method==='GET'){
   const rows=await env.DB.prepare('SELECT id,title,date,location FROM hangouts ORDER BY date').all();return json({hangouts:rows.results});
  }

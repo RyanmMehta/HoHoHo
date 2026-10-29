@@ -1,0 +1,45 @@
+import {categories,places} from './places-data.js';
+const draftKey='hohoho-places-draft-v1';
+const el=(tag,text,className)=>{const node=document.createElement(tag);if(text)node.textContent=text;if(className)node.className=className;return node};
+export async function renderPlaces(container){
+ container.innerHTML='<div class="calendar-eyebrow">A LITTLE HOLIDAY WISH LIST</div><h1 tabindex="-1">Places to go. Things to do.</h1><p class="places-intro">Pick an activity, then the places or plans you’d love. Choose as many as you like.</p><div class="places-body"><p role="status">Loading your choices…</p></div>';
+ const body=container.querySelector('.places-body');
+ let saved;
+ try{const response=await fetch('/api/preferences',{cache:'no-store'});if(!response.ok)throw new Error();saved=(await response.json()).preference}catch{body.replaceChildren(el('p','Could not load your choices. Please try again.'));const retry=el('button','Try again','continue');retry.onclick=()=>renderPlaces(container);body.append(retry);return}
+ let draft;try{draft=JSON.parse(localStorage.getItem(draftKey)||'null')}catch{}
+ let name=saved?.name||'';try{name=name||localStorage.getItem('hohoho-guest-name')||''}catch{}
+ const chosen=new Set((draft?.choices||saved?.choices||[]).filter(id=>places.some(p=>p.id===id)));
+ if(draft?.name)name=draft.name;
+ let active=categories[0].id;
+ body.innerHTML='<label class="places-name">Your name<input id="places-name" autocomplete="name" maxlength="80" required placeholder="First and last name"></label><p class="places-private">Only Ryan can see your choices. Return in this browser to update them.</p><h2 class="step-heading">1. What sounds fun?</h2><div class="activity-tabs" role="group" aria-label="Activities"></div><h2 class="step-heading" id="place-step">2. Choose your places</h2><div class="place-options"></div><section class="place-summary"><h2>Your wish list</h2><div class="picked-options"></div><p class="places-status" role="status" aria-live="polite"></p><button class="continue save-places">Save my choices →</button><p class="places-private">This shares your interests, not a booking. Outings may need an earlier start than 7 p.m. Check venue hours before making plans.</p></section><p class="places-research">Venue details checked Oct 29, 2026 · Official sources linked on each card.</p>';
+ const input=body.querySelector('input');input.value=name;
+ const status=body.querySelector('.places-status');
+ const stash=()=>{status.textContent='Unsaved changes';try{localStorage.setItem(draftKey,JSON.stringify({name:input.value,choices:[...chosen]}))}catch{status.textContent='Unsaved changes — keep this page open until you save.'}};
+ input.oninput=stash;
+ function summary(){const target=body.querySelector('.picked-options');target.replaceChildren();if(!chosen.size)target.append(el('p','Nothing picked yet. Saving an empty list clears your previous choices.','places-private'));
+ for(const id of chosen){const item=places.find(p=>p.id===id);const button=el('button',item.title+' ×','picked-chip');button.type='button';button.setAttribute('aria-label','Remove '+item.title);button.onclick=()=>{chosen.delete(id);stash();draw()};target.append(button)}
+ body.querySelector('.save-places').textContent=`Save my choices (${chosen.size}) →`;
+ }
+ function draw(){const tabs=body.querySelector('.activity-tabs');tabs.replaceChildren();for(const category of categories){const count=places.filter(p=>p.category===category.id&&chosen.has(p.id)).length;const button=el('button',category.title+(count?' · '+count:''),'activity-tab');button.type='button';button.setAttribute('aria-pressed',String(active===category.id));button.onclick=()=>{active=category.id;draw()};tabs.append(button)}
+ body.querySelector('#place-step').textContent=active==='home'?'2. Choose your at-home plans':'2. Choose your places';const options=body.querySelector('.place-options');options.replaceChildren();
+ options.append(el('p',categories.find(c=>c.id===active).description,'places-private'));
+ for(const item of places.filter(p=>p.category===active)){const card=el('article',null,'place-option');const label=el('label',null,'place-choice');const checkbox=el('input');checkbox.type='checkbox';checkbox.checked=chosen.has(item.id);checkbox.setAttribute('aria-label',item.title);checkbox.onchange=()=>{checkbox.checked?chosen.add(item.id):chosen.delete(item.id);stash();summary();const button=[...tabs.children][categories.findIndex(c=>c.id===active)];button.textContent=categories.find(c=>c.id===active).title+' · '+places.filter(p=>p.category===active&&chosen.has(p.id)).length};const heading=el('span',item.title);label.append(checkbox,heading);card.append(label,el('p',item.place,'place-location'),el('p',item.description,'place-description'),el('p',item.note,'place-note'));const foot=el('div',null,'place-foot');foot.append(el('span',item.cost,'place-tag'));if(item.url){const link=el('a','Official details ↗');link.href=item.url;link.target='_blank';link.rel='noopener noreferrer';foot.append(link)}card.append(foot);options.append(card)}summary();
+ }
+ draw();if(draft)status.textContent='Your unsaved choices have been restored.';else if(saved)status.textContent='Your saved choices are loaded.';
+ body.querySelector('.save-places').onclick=async()=>{if(!input.value.trim()){status.textContent='Please enter your name.';input.focus();return}const button=body.querySelector('.save-places');button.disabled=true;input.disabled=true;body.querySelectorAll('input[type=checkbox],.picked-chip,.activity-tab').forEach(n=>n.disabled=true);const submitted={name:input.value.trim(),choices:[...chosen]};status.textContent='Saving…';try{const response=await fetch('/api/preferences',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(submitted)});const result=await response.json();if(!response.ok)throw new Error(result.error||'Could not save.');try{localStorage.removeItem(draftKey);localStorage.setItem('hohoho-guest-name',submitted.name)}catch{}status.textContent='Saved privately for Ryan. You can change your choices anytime from this browser.'}catch(error){status.textContent=error.message==='Failed to fetch'?'Could not connect. Your choices are still here; please try again.':error.message}finally{button.disabled=false;input.disabled=false;body.querySelectorAll('input[type=checkbox],.picked-chip,.activity-tab').forEach(n=>n.disabled=false)}};
+}
+export function preferenceSummary(responses){
+ const active=responses.filter(r=>r.choices.length);
+ const ranked=places.map(place=>({...place,people:active.filter(r=>r.choices.includes(place.id)).map(r=>r.name)})).filter(p=>p.people.length).sort((a,b)=>b.people.length-a.people.length||a.title.localeCompare(b.title));
+ const activities=categories.map(category=>({...category,count:active.filter(r=>r.choices.some(id=>places.some(p=>p.id===id&&p.category===category.id))).length})).sort((a,b)=>b.count-a.count||a.title.localeCompare(b.title));
+ return {active,ranked,activities};
+}
+export async function renderHostPreferences(container){
+ container.textContent='Loading activity preferences…';
+ try{const response=await fetch('/api/admin/preferences',{cache:'no-store'});if(!response.ok)throw new Error(response.status===401?'Sign in again to view activity preferences.':'Could not load activity preferences. Use Refresh responses to retry.');const {preferences}=await response.json();const {active,ranked,activities}=preferenceSummary(preferences);container.replaceChildren();container.append(el('p',`${active.length} ${active.length===1?'friend has':'friends have'} picked activities. Each person counts once per activity; each selected option gets one vote.`,'muted'));
+ if(!active.length){container.append(el('p','No activity choices yet. Share the Places to Go tab to start the wish list.','muted'));return}
+ container.append(el('h3','Most popular activities'));for(const item of activities.filter(a=>a.count)){const row=el('p',`${item.title} · ${item.count} ${item.count===1?'person':'people'}`);container.append(row)}
+ container.append(el('h3','Places & plans, most wanted first'));for(const item of ranked){const details=el('details',null,'preference-rank');details.append(el('summary',`${item.title} · ${item.people.length} ${item.people.length===1?'vote':'votes'}`),el('p',item.place,'muted'),el('p',item.people.join(', ')));container.append(details)}
+ const details=el('details',null,'preference-rank');details.append(el('summary','Everyone’s choices'));for(const row of active){const p=el('p');p.append(el('strong',row.name+': '),document.createTextNode(row.choices.map(id=>places.find(p=>p.id===id)?.title||id).join(' · ')));details.append(p)}container.append(details);
+ }catch(error){container.textContent=error.message}
+}
