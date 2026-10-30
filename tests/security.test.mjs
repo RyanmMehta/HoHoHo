@@ -6,7 +6,7 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import {validateResponse} from '../server/worker.js';
 let mf,db;
 const password='test-password-only';const salt=randomBytes(16);const digest=pbkdf2Sync(password,salt,100000,32,'sha256').toString('hex');
-before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modulesRoot:new URL('../',import.meta.url).pathname,modules:[{type:'ESModule',path:new URL('../server/worker.js',import.meta.url).pathname},{type:'ESModule',path:new URL('../places-data.js',import.meta.url).pathname}],scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql','0003_hangouts.sql','0004_preferences.sql','0005_guests.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
+before(async()=>{mf=new Miniflare(convertV4MiniflareOptions({workers:[{name:"hohoho-test",modulesRoot:new URL('../',import.meta.url).pathname,modules:[{type:'ESModule',path:new URL('../server/worker.js',import.meta.url).pathname},{type:'ESModule',path:new URL('../places-data.js',import.meta.url).pathname}],scriptPath:new URL('../server/worker.js',import.meta.url).pathname,compatibilityDate:'2026-10-29',d1Databases:['DB'],bindings:{ADMIN_NAME:'Ryan Mehta',ADMIN_PASSWORD_HASH:salt.toString('hex')+':'+digest}}]}));db=await mf.getD1Database('DB');for(const file of ['0001_initial.sql','0002_response_trash.sql','0003_hangouts.sql','0004_preferences.sql','0005_guests.sql','0006_suggestions.sql'])await db.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8').replace(/\n/g,' '))});
 after(()=>mf?.dispose());
 const request=(path,data,cookie='',origin='https://example.com',ip='test')=>mf.dispatchFetch('https://example.com'+path,{method:data?'POST':'GET',headers:{'Content-Type':'application/json',Origin:origin,Cookie:cookie,'CF-Connecting-IP':ip},body:data?JSON.stringify(data):undefined});
 const cookieOf=r=>r.headers.get('set-cookie').split(';')[0];
@@ -74,4 +74,19 @@ test('shared guest identity is required by UI and remains consistent across both
  await request('/api/guest',{name:'Corrected Guest'},cookie);
  const updated=await db.prepare("SELECT name FROM responses WHERE name='Corrected Guest'").first();assert.ok(updated);
  assert.equal((await (await request('/api/preferences',null,cookie)).json()).preference.name,'Corrected Guest');
+});
+
+test('suggestions require a registered guest and stay private, editable and clearable',async()=>{
+ assert.equal((await request('/api/suggestion',{text:'Idea'})).status,401);
+ assert.equal((await request('/api/admin/suggestions')).status,401);
+ const guest=await request('/api/guest',{name:'Suggestion guest'});const cookie=cookieOf(guest);
+ assert.equal((await request('/api/suggestion',{text:'x'.repeat(801)},cookie)).status,400);
+ assert.equal((await request('/api/suggestion',{text:'Cookie swap'},cookie,'https://evil.example')).status,403);
+ assert.equal((await request('/api/suggestion',{text:'Cookie swap'},cookie)).status,200);
+ assert.equal((await (await request('/api/suggestion',null,cookie)).json()).suggestion.text,'Cookie swap');
+ const other=cookieOf(await request('/api/guest',{name:'Other guest'}));assert.equal((await (await request('/api/suggestion',null,other)).json()).suggestion,null);
+ await request('/api/suggestion',{text:'Pottery night'},cookie);
+ assert.equal((await (await request('/api/suggestion',null,cookie)).json()).suggestion.text,'Pottery night');
+ await request('/api/suggestion',{text:''},cookie);
+ assert.equal((await (await request('/api/suggestion',null,cookie)).json()).suggestion.text,'');
 });

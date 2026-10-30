@@ -58,6 +58,18 @@ async function api(request,env){
   if(!await session(request,env))return json({error:'Sign in to view guests.'},401);
   const rows=await env.DB.prepare('SELECT name,updated_at FROM guests ORDER BY updated_at DESC').all();return json({guests:rows.results});
  }
+ if(path==='/api/suggestion'&&(request.method==='GET'||request.method==='POST')){
+  const raw=cookies(request).hoho_guest;if(!raw||!/^[a-f0-9]{64}$/.test(raw))return json({error:'Please enter your name first.'},401);
+  const key=await hash(raw),guest=await env.DB.prepare('SELECT name FROM guests WHERE edit_hash=?').bind(key).first();if(!guest)return json({error:'Please enter your name first.'},401);
+  if(request.method==='GET'){const row=await env.DB.prepare('SELECT text,updated_at FROM suggestions WHERE edit_hash=?').bind(key).first();return json({suggestion:row||null})}
+  const data=await body(request);if(typeof data.text!=='string'||data.text.length>800||/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(data.text))return json({error:'Keep your suggestions to 800 characters or fewer.'},400);
+  if(!await throttle(env,'suggestion:'+key,30,3600))return json({error:'Too many updates. Please try again later.'},429);
+  await env.DB.prepare('INSERT INTO suggestions(edit_hash,text,updated_at) VALUES(?,?,?) ON CONFLICT(edit_hash) DO UPDATE SET text=excluded.text,updated_at=excluded.updated_at').bind(key,data.text.trim(),Date.now()).run();return json({ok:true});
+ }
+ if(path==='/api/admin/suggestions'&&request.method==='GET'){
+  if(!await session(request,env))return json({error:'Sign in to view suggestions.'},401);
+  const rows=await env.DB.prepare("SELECT g.name,s.text,s.updated_at FROM suggestions s JOIN guests g ON g.edit_hash=s.edit_hash WHERE s.text<>'' ORDER BY s.updated_at DESC").all();return json({suggestions:rows.results});
+ }
  if(path==='/api/preferences'&&request.method==='GET'){
   const raw=cookies(request).hoho_guest;
   if(!raw||!/^[a-f0-9]{64}$/.test(raw))return json({preference:null});
