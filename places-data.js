@@ -59,8 +59,7 @@ export const places=[
     "includes": "One hot chocolate and a small shared pastry allowance; planning estimate, not a menu quote.",
     "duration": "45–60 minutes",
     "group": "2–6",
-    "plan": "Get takeaway if the tearoom queue is long, then walk toward Bryant Park. Weekend visits need an earlier start.",
-    "contribution": 10
+    "plan": "Get takeaway if the tearoom queue is long, then walk toward Bryant Park. Weekend visits need an earlier start."
   },
   {
     "id": "mariebelle",
@@ -75,8 +74,7 @@ export const places=[
     "includes": "Drink and dessert allowance; full afternoon tea is a separate, higher-cost booking.",
     "duration": "45–75 minutes",
     "group": "2–6",
-    "plan": "Choose cocoa or dessert rather than a full tea service. Check table availability and dietary options.",
-    "contribution": null
+    "plan": "Choose cocoa or dessert rather than a full tea service. Check table availability and dietary options."
   },
   {
     "id": "bryant-rink",
@@ -91,8 +89,7 @@ export const places=[
     "includes": "Official rentals: $18.72–64.48 before tax, including the listed administrative fee. Lockers or bag check may add cost.",
     "duration": "75–90 minutes including check-in",
     "group": "4–8",
-    "plan": "Reserve the same session; wear warm socks and gloves. Add snacks afterward only if the stalls are still open.",
-    "contribution": null
+    "plan": "Reserve the same session; wear warm socks and gloves. Add snacks afterward only if the stalls are still open."
   },
   {
     "id": "stuytown-rink",
@@ -107,8 +104,7 @@ export const places=[
     "includes": "A one-off group/guest price was not verified; season-pass prices are not a per-visit quote.",
     "duration": "About 1–2 hours",
     "group": "4–8, subject to access",
-    "plan": "Find a resident contact first and verify admission for every guest before choosing a date.",
-    "contribution": null
+    "plan": "Find a resident contact first and verify admission for every guest before choosing a date."
   },
   {
     "id": "wollman",
@@ -123,8 +119,7 @@ export const places=[
     "includes": "Estimated admission plus rental budget; the live session price must be checked before booking.",
     "duration": "90–120 minutes",
     "group": "4–8",
-    "plan": "Book matching entry times. Bring gloves and allow time to walk into Central Park; check the last skating session.",
-    "contribution": null
+    "plan": "Book matching entry times. Bring gloves and allow time to walk into Central Park; check the last skating session."
   },
   {
     "id": "rockefeller-rink",
@@ -139,8 +134,7 @@ export const places=[
     "includes": "Official admission starts at $22; rental, session pricing, tax and extras can raise the total substantially.",
     "duration": "60-minute skate + check-in",
     "group": "2–6",
-    "plan": "Best for a small group prioritizing the iconic setting. Compare session totals before committing.",
-    "contribution": null
+    "plan": "Best for a small group prioritizing the iconic setting. Compare session totals before committing."
   },
   {
     "id": "bryant-market",
@@ -155,8 +149,7 @@ export const places=[
     "includes": "Shopping is extra. Snack allowance is a planning estimate, not a package.",
     "duration": "60–90 minutes",
     "group": "3–8",
-    "plan": "Meet at a specific park entrance, browse separately, then regroup for one shared snack stop.",
-    "contribution": null
+    "plan": "Meet at a specific park entrance, browse separately, then regroup for one shared snack stop."
   },
   {
     "id": "union-market",
@@ -171,8 +164,7 @@ export const places=[
     "includes": "Gift purchases extra; food allowance is discretionary.",
     "duration": "60–90 minutes",
     "group": "3–8",
-    "plan": "Good before a downtown dinner. Pick a spending cap for any mini gift challenge.",
-    "contribution": null
+    "plan": "Good before a downtown dinner. Pick a spending cap for any mini gift challenge."
   },
   {
     "id": "columbus-market",
@@ -187,8 +179,7 @@ export const places=[
     "includes": "Gift purchases extra; food allowance is discretionary.",
     "duration": "45–75 minutes",
     "group": "3–8",
-    "plan": "Go before closing; combine with a short Central Park edge walk, weather permitting.",
-    "contribution": null
+    "plan": "Go before closing; combine with a short Central Park edge walk, weather permitting."
   },
   {
     "id": "grand-central",
@@ -203,8 +194,7 @@ export const places=[
     "includes": "Craft purchases extra; snack allowance is discretionary.",
     "duration": "45–75 minutes",
     "group": "3–8",
-    "plan": "Indoor backup for bad weather. This is an earlier outing, not a midnight plan.",
-    "contribution": null
+    "plan": "Indoor backup for bad weather. This is an earlier outing, not a midnight plan."
   },
   {
     "id": "rockefeller-tree",
@@ -219,8 +209,7 @@ export const places=[
     "includes": "Public-plaza walk; paid observation-deck access is not included.",
     "duration": "45–75 minutes",
     "group": "3–8",
-    "plan": "Choose a meeting point away from the busiest plaza and take photos in small groups.",
-    "contribution": null
+    "plan": "Choose a meeting point away from the busiest plaza and take photos in small groups."
   },
   {
     "id": "dyker",
@@ -235,8 +224,7 @@ export const places=[
     "includes": "No tour included. Budget separately for subway or a shared car.",
     "duration": "60–90 minutes on foot + travel",
     "group": "4–8",
-    "plan": "Go after dark, wear warm shoes, and keep voices down around homes. Display hours vary.",
-    "contribution": null
+    "plan": "Go after dark, wear warm shoes, and keep voices down around homes. Display hours vary."
   },
   {
     "id": "bronx-lights",
@@ -251,8 +239,7 @@ export const places=[
     "includes": "Official deal-day adult listing is $29.95; date-specific, regular or any-night tickets may cost more. Food and travel extra.",
     "duration": "90–120 minutes + travel",
     "group": "4–8",
-    "plan": "Choose a listed operating date. Arrive early enough to finish before the 9 p.m. close.",
-    "contribution": null
+    "plan": "Choose a listed operating date. Arrive early enough to finish before the 9 p.m. close."
   },
   {
     "id": "rockettes",
@@ -267,8 +254,7 @@ export const places=[
     "includes": "Seat and performance dependent, not a verified quote. Check the full checkout total before collecting money.",
     "duration": "About 2 hours with arrival",
     "group": "4–8",
-    "plan": "Agree on a maximum seat budget, then buy seats together. Do not assume the cheapest advertised seat is available.",
-    "contribution": null
+    "plan": "Agree on a maximum seat budget, then buy seats together. Do not assume the cheapest advertised seat is available."
   },
   {
     "id": "train-show",
@@ -283,8 +269,7 @@ export const places=[
     "includes": "Estimated adult exhibition budget; verify the selected evening ticket and any surcharges.",
     "duration": "90–120 minutes + travel",
     "group": "3–8",
-    "plan": "Use an extended-evening date. Leave time for the Bronx journey and a warm-up break.",
-    "contribution": null
+    "plan": "Use an extended-evening date. Leave time for the Bronx journey and a warm-up break."
   },
   {
     "id": "escape-game",
@@ -299,8 +284,7 @@ export const places=[
     "includes": "Estimated per-player ticket budget, excluding tax; private rooms may require purchasing unused spots.",
     "duration": "About 90 minutes including briefing",
     "group": "4–8, room-dependent",
-    "plan": "Choose difficulty and capacity together; confirm whether strangers may join the room.",
-    "contribution": null
+    "plan": "Choose difficulty and capacity together; confirm whether strangers may join the room."
   },
   {
     "id": "white-elephant",
@@ -312,11 +296,10 @@ export const places=[
     "cost": "Shared supplies",
     "url": "",
     "price": "About $20",
-    "includes": "Suggested gift budget, not an admission fee. Ryan-supported contribution funds a shared gift pool.",
+    "includes": "Suggested cost of one wrapped gift per guest; agree on the gift spending limit in advance.",
     "duration": "60–90 minutes",
     "group": "6–12",
-    "plan": "Use a shared gift pool if collecting contributions. Draw numbers; allow two steals per gift and set a clear ending.",
-    "contribution": 10
+    "plan": "Bring one wrapped gift. Draw numbers; allow two steals per gift and set a clear ending."
   },
   {
     "id": "potluck",
@@ -331,8 +314,7 @@ export const places=[
     "includes": "Estimated shared grocery cost per guest; contributions buy ingredients. Avoid charging both a fee and a full dish.",
     "duration": "3–4 hours",
     "group": "6–12",
-    "plan": "Assign mains, sides and desserts; collect dietary needs. Confirm whether people contribute cash or bring food.",
-    "contribution": 10
+    "plan": "Assign mains, sides and desserts; collect dietary needs. Confirm whether people contribute cash or bring food."
   },
   {
     "id": "home-escape",
@@ -347,8 +329,7 @@ export const places=[
     "includes": "DIY printouts, clue envelopes, small locks or props shared among 6–8 people.",
     "duration": "60–90 minutes of play",
     "group": "4–8",
-    "plan": "One host designs a missing-present mystery with 5–7 puzzles and a hint system. Test the clues before guests arrive.",
-    "contribution": null
+    "plan": "One host designs a missing-present mystery with 5–7 puzzles and a hint system. Test the clues before guests arrive."
   },
   {
     "id": "gingerbread",
@@ -363,8 +344,7 @@ export const places=[
     "includes": "Estimated kits, candy and frosting shared in teams; table covers included in the supply plan.",
     "duration": "90–120 minutes",
     "group": "4–10",
-    "plan": "Split into pairs, allow 45 minutes to build, then vote on funniest, coziest and most ambitious.",
-    "contribution": 10
+    "plan": "Split into pairs, allow 45 minutes to build, then vote on funniest, coziest and most ambitious."
   },
   {
     "id": "cookie-swap",
@@ -379,8 +359,7 @@ export const places=[
     "includes": "Estimated dough, icing, toppings and takeaway boxes; shared supplies rather than a bakery quote.",
     "duration": "2–3 hours",
     "group": "4–10",
-    "plan": "Bake ahead to avoid oven queues. Label ingredients and give everyone a mixed box to take home.",
-    "contribution": 10
+    "plan": "Bake ahead to avoid oven queues. Label ingredients and give everyone a mixed box to take home."
   },
   {
     "id": "movie-night",
@@ -395,8 +374,7 @@ export const places=[
     "includes": "Popcorn, cocoa and snacks; assumes the host already has lawful access to the chosen films.",
     "duration": "3–4 hours",
     "group": "4–10",
-    "plan": "Vote on two movies in advance. Add an intermission for snacks and a blanket corner.",
-    "contribution": null
+    "plan": "Vote on two movies in advance. Add an intermission for snacks and a blanket corner."
   },
   {
     "id": "holiday-games",
@@ -411,8 +389,7 @@ export const places=[
     "includes": "Use games already owned; optional snacks and small prizes.",
     "duration": "2–3 hours",
     "group": "4–12",
-    "plan": "Rotate trivia, charades and music guessing in short rounds so everyone gets a turn.",
-    "contribution": null
+    "plan": "Rotate trivia, charades and music guessing in short rounds so everyone gets a turn."
   },
   {
     "id": "craft-night",
@@ -427,8 +404,7 @@ export const places=[
     "includes": "Paper, blank ornaments, ribbon, markers and shared glue supplies.",
     "duration": "90–120 minutes",
     "group": "4–8",
-    "plan": "Set out two craft stations and a drying area; make cards while ornaments dry.",
-    "contribution": null
+    "plan": "Set out two craft stations and a drying area; make cards while ornaments dry."
   },
   {
     "id": "serendipity",
@@ -443,8 +419,7 @@ export const places=[
     "includes": "Original frozen hot chocolate is listed at $15.95 before tax/tip. Budget more for another dessert.",
     "duration": "45–75 minutes",
     "group": "2–6",
-    "plan": "Choose one specialty drink each, or ask about sharing rules before ordering.",
-    "contribution": null
+    "plan": "Choose one specialty drink each, or ask about sharing rules before ordering."
   },
   {
     "id": "lightscape",
@@ -459,8 +434,7 @@ export const places=[
     "includes": "Planning allowance only; peak/value-night ticket prices need checking. Food and transport extra.",
     "duration": "90–120 minutes",
     "group": "4–8",
-    "plan": "Book one entry window, dress for a continuous outdoor walk, and allow Brooklyn travel time.",
-    "contribution": null
+    "plan": "Book one entry window, dress for a continuous outdoor walk, and allow Brooklyn travel time."
   },
   {
     "id": "skyline-ferry",
@@ -475,8 +449,7 @@ export const places=[
     "includes": "The Staten Island Ferry is free. Do not confuse it with paid NYC Ferry routes.",
     "duration": "60–90 minutes round trip including transfer",
     "group": "3–8",
-    "plan": "Disembark and re-board at the other terminal; use indoor seating when cold and check service notices.",
-    "contribution": null
+    "plan": "Disembark and re-board at the other terminal; use indoor seating when cold and check service notices."
   },
   {
     "id": "dumbo-walk",
@@ -491,8 +464,7 @@ export const places=[
     "includes": "Self-guided park walk; café purchases and transport extra.",
     "duration": "60–90 minutes",
     "group": "3–8",
-    "plan": "Give teams five photo prompts, meet near the waterfront, and finish with a café stop before it closes.",
-    "contribution": null
+    "plan": "Give teams five photo prompts, meet near the waterfront, and finish with a café stop before it closes."
   },
   {
     "id": "icecream-museum",
@@ -507,8 +479,7 @@ export const places=[
     "includes": "Official general admission starts at $39 and includes ice cream; prices vary by day/time.",
     "duration": "60–90 minutes",
     "group": "3–8",
-    "plan": "Book the same slot and ask about dietary accommodations before purchasing.",
-    "contribution": null
+    "plan": "Book the same slot and ask about dietary accommodations before purchasing."
   },
   {
     "id": "color-factory",
@@ -523,8 +494,7 @@ export const places=[
     "includes": "Estimated ticket budget; use the live booking calendar for the current price.",
     "duration": "60–90 minutes",
     "group": "3–8",
-    "plan": "Pick a shared time slot and leave extra time for photos; compare ticket conditions before booking.",
-    "contribution": null
+    "plan": "Pick a shared time slot and leave extra time for photos; compare ticket conditions before booking."
   },
   {
     "id": "uncommons",
@@ -539,8 +509,7 @@ export const places=[
     "includes": "Planning budget for the gaming fee plus a simple drink; current exact fee must be confirmed.",
     "duration": "2–3 hours",
     "group": "4–6",
-    "plan": "Start with a quick game, then one longer team game. Ask staff for an approachable recommendation.",
-    "contribution": 10
+    "plan": "Start with a quick game, then one longer team game. Ask staff for an approachable recommendation."
   },
   {
     "id": "pottery-uws",
@@ -555,8 +524,7 @@ export const places=[
     "includes": "Official $16 studio fee plus pottery from $22: minimum $38 before tax and any group gratuity.",
     "duration": "90–120 minutes",
     "group": "3–6",
-    "plan": "Choose a small piece to keep costs predictable. Arrange one person to collect the finished pottery.",
-    "contribution": null
+    "plan": "Choose a small piece to keep costs predictable. Arrange one person to collect the finished pottery."
   },
   {
     "id": "eataly",
@@ -571,8 +539,7 @@ export const places=[
     "includes": "Self-set snack budget, excluding a sit-down dinner or gift shopping.",
     "duration": "60–90 minutes",
     "group": "3–6",
-    "plan": "Each person chooses one shareable treat. Check allergens and ask where food can be eaten.",
-    "contribution": null
+    "plan": "Each person chooses one shareable treat. Check allergens and ask where food can be eaten."
   },
   {
     "id": "soup-night",
@@ -587,8 +554,7 @@ export const places=[
     "includes": "Groceries for a shared meal; assumes basic cooking equipment at home.",
     "duration": "3 hours",
     "group": "6–10",
-    "plan": "Choose one vegetarian soup; prep soups ahead, then cook sandwiches in small batches.",
-    "contribution": 10
+    "plan": "Choose one vegetarian soup; prep soups ahead, then cook sandwiches in small batches."
   },
   {
     "id": "holiday-mystery",
@@ -603,8 +569,7 @@ export const places=[
     "includes": "DIY or purchased game kit split among the group plus simple food; commercial kit prices vary.",
     "duration": "3–4 hours",
     "group": "6–10",
-    "plan": "Pick an age-appropriate kit, send roles early, and make costumes optional.",
-    "contribution": null
+    "plan": "Pick an age-appropriate kit, send roles early, and make costumes optional."
   },
   {
     "id": "cocoa-flight",
@@ -619,8 +584,7 @@ export const places=[
     "includes": "Milk or alternatives, cocoa, toppings and small tasting cups.",
     "duration": "60–90 minutes",
     "group": "4–10",
-    "plan": "Make small portions, label allergens, and score each flavor before revealing the winner.",
-    "contribution": null
+    "plan": "Make small portions, label allergens, and score each flavor before revealing the winner."
   },
   {
     "id": "powerpoint",
@@ -635,8 +599,7 @@ export const places=[
     "includes": "Use an existing laptop/screen; optional snacks.",
     "duration": "2–3 hours",
     "group": "4–10",
-    "plan": "Set a five-slide limit and themes such as best Christmas movie villain or ranking holiday snacks.",
-    "contribution": null
+    "plan": "Set a five-slide limit and themes such as best Christmas movie villain or ranking holiday snacks."
   },
   {
     "id": "wrapping",
@@ -651,8 +614,7 @@ export const places=[
     "includes": "Wrapping paper, tape, tags and ribbon only; presents are not included.",
     "duration": "90–120 minutes",
     "group": "4–8",
-    "plan": "Bring your own gifts. Set up a recyclable offcut pile and a separate card-writing corner.",
-    "contribution": null
+    "plan": "Bring your own gifts. Set up a recyclable offcut pile and a separate card-writing corner."
   }
 ];
 export const validPlaceIds=new Set(places.map(p=>p.id));

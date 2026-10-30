@@ -181,7 +181,7 @@ Original at-home planning idea; no venue or booking implied.
 
 # Expanded budgets and plans — October 29, 2026
 
-38 options total. Durations, group sizes, snack allowances and home supply budgets are planning suggestions, not venue guarantees. Prices are per person, excluding transport, taxes, tips and extras unless specified. For selected plans with an approximately $20 full budget, the page labels a $10 friend contribution with Ryan covering the difference; it never describes $10 as the venue price. Dynamic ticket estimates are explicitly provisional. No purchases or financial transfers are made.
+38 options total. Durations, group sizes, snack allowances and home supply budgets are planning suggestions, not venue guarantees. Prices are per person, excluding transport, taxes, tips and extras unless specified. All cards show the full per-person estimate; no host subsidy or discounted contribution is promised. Dynamic ticket estimates are explicitly provisional. No purchases or financial transfers are made.
 
 ## Angelina Paris
 - Full planning cost: About $20 per person
@@ -297,7 +297,7 @@ Original at-home planning idea; no venue or booking implied.
 
 ## White Elephant
 - Full planning cost: About $20 per person
-- Suggested gift budget, not an admission fee. Ryan-supported contribution funds a shared gift pool.
+- Suggested gift budget, not an admission fee. Agree on a gift spending limit in advance.
 - Suggested duration: 60–90 minutes; group: 6–12
 - Plan: Use a shared gift pool if collecting contributions. Draw numbers; allow two steals per gift and set a clear ending.
 - Source: Original home-party idea; estimated shared supply budget.
